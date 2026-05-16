@@ -1,0 +1,94 @@
+/* client/src/components/Navbar.css */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background-color: var(--forest, #4F5127);
+  border-bottom: 2px solid var(--bistre, #837534);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* ── Brand ───────────────────────────────────────────── */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Georgia', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ivory, #F9EAD2);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.navbar-brand:hover { opacity: 0.85; }
+
+.navbar-brand-star {
+  color: var(--peach, #DB918F);
+  font-size: 0.9rem;
+}
+
+/* ── Links container ─────────────────────────────────── */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Regular link ────────────────────────────────────── */
+.navbar-link {
+  font-family: sans-serif;
+  font-size: 0.88rem;
+  color: var(--champagne, #F8EEC2);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: background 0.2s, color 0.2s;
+  letter-spacing: 0.3px;
+}
+.navbar-link:hover {
+  background: rgba(249, 234, 210, 0.12);
+  color: var(--ivory, #F9EAD2);
+}
+
+/* ── Register button (filled) ────────────────────────── */
+.navbar-btn {
+  font-family: sans-serif;
+  font-size: 0.88rem;
+  color: var(--forest, #4F5127);
+  background: var(--peach, #DB918F);
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.15s;
+  letter-spacing: 0.3px;
+}
+.navbar-btn:hover {
+  background: var(--champagne, #F8EEC2);
+  transform: translateY(-1px);
+}
+
+/* ── Logout button ───────────────────────────────────── */
+.navbar-logout {
+  font-family: sans-serif;
+  font-size: 0.88rem;
+  color: var(--peach, #DB918F);
+  background: transparent;
+  border: 1px solid var(--peach, #DB918F);
+  padding: 5px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  letter-spacing: 0.3px;
+}
+.navbar-logout:hover {
+  background: var(--peach, #DB918F);
+  color: #fff;
+}

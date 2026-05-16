@@ -1,0 +1,81 @@
+/* client/src/components/Spinner.css */
+
+/* ── Overlay (full-page mode) ────────────────────────── */
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(249, 234, 210, 0.6);   /* ivory tint */
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Spinner base ────────────────────────────────────── */
+.spinner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* sizes */
+.spinner--sm { width: 32px;  height: 32px;  }
+.spinner--md { width: 52px;  height: 52px;  }
+.spinner--lg { width: 76px;  height: 76px;  }
+
+/* ── Rings ───────────────────────────────────────────── */
+.spinner-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+}
+
+/* outer ring — peach */
+.spinner-ring--outer {
+  border-width: 3px;
+  border-top-color: var(--peach, #DB918F);
+  border-right-color: var(--peach, #DB918F);
+  animation: spin 1s linear infinite;
+}
+
+/* inner ring — bistre, counter-spin */
+.spinner-ring--inner {
+  inset: 8px;
+  border-width: 2px;
+  border-top-color: var(--bistre, #837534);
+  animation: spin-reverse 0.75s linear infinite;
+}
+
+/* ── Center dot ──────────────────────────────────────── */
+.spinner-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--forest, #4F5127);
+  animation: pulse-dot 1s ease-in-out infinite;
+}
+
+/* scale dot for sm / lg */
+.spinner--sm .spinner-ring--inner { inset: 6px; }
+.spinner--sm .spinner-dot         { width: 4px; height: 4px; }
+.spinner--lg .spinner-ring--inner { inset: 12px; }
+.spinner--lg .spinner-ring--outer { border-width: 4px; }
+.spinner--lg .spinner-dot         { width: 8px; height: 8px; }
+
+/* ── Keyframes ───────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1);   opacity: 1;   }
+  50%       { transform: scale(1.6); opacity: 0.5; }
+}

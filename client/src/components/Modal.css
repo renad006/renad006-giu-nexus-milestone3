@@ -1,0 +1,112 @@
+/* client/src/components/Modal.css */
+
+/* ── Backdrop ────────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(79, 81, 39, 0.55);   /* forest tint */
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: backdrop-in 0.2s ease;
+}
+
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Box ─────────────────────────────────────────────── */
+.modal-box {
+  position: relative;
+  background: var(--ivory, #F9EAD2);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow:
+    0 20px 60px rgba(79, 81, 39, 0.25),
+    0 0 0 1px rgba(131, 117, 52, 0.15);
+  animation: box-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes box-in {
+  from { opacity: 0; transform: scale(0.88) translateY(16px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+/* sizes */
+.modal-box--sm { width: 100%; max-width: 360px; }
+.modal-box--md { width: 100%; max-width: 520px; }
+.modal-box--lg { width: 100%; max-width: 720px; }
+
+/* decorative petal */
+.modal-petal {
+  position: absolute;
+  top: -8px;
+  right: 14px;
+  font-size: 3rem;
+  color: var(--peach, #DB918F);
+  opacity: 0.18;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(131, 117, 52, 0.2);
+}
+
+.modal-title {
+  font-family: 'Georgia', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--forest, #4F5127);
+  margin: 0;
+}
+
+/* ── Close button ────────────────────────────────────── */
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--bistre, #837534);
+  background: rgba(131, 117, 52, 0.1);
+  transition: background 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+.modal-close:hover {
+  background: var(--peach, #DB918F);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.modal-close--notitle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+/* ── Body ────────────────────────────────────────────── */
+.modal-body {
+  color: var(--forest, #4F5127);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}

@@ -1,0 +1,92 @@
+/* client/src/components/Skeleton.css */
+
+/* ── Shimmer animation ───────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+/* ── Base block ──────────────────────────────────────── */
+.skeleton-block {
+  background: linear-gradient(
+    90deg,
+    #e8d9c0 25%,      /* ivory-dark */
+    #f3e8d4 50%,      /* ivory-light highlight */
+    #e8d9c0 75%       /* ivory-dark */
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ── Job Card Skeleton ───────────────────────────────── */
+.skeleton-job-card {
+  background: var(--ivory, #F9EAD2);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 2px 12px rgba(79, 81, 39, 0.08);
+  border: 1px solid rgba(131, 117, 52, 0.12);
+}
+
+.skeleton-job-card__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.skeleton-job-card__title-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-job-card__tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skeleton-job-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+/* ── Profile Skeleton ────────────────────────────────── */
+.skeleton-profile {
+  background: var(--ivory, #F9EAD2);
+  border-radius: 20px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 12px rgba(79, 81, 39, 0.08);
+  border: 1px solid rgba(131, 117, 52, 0.12);
+  max-width: 360px;
+}
+
+.skeleton-profile__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.skeleton-profile__bio {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-profile__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
