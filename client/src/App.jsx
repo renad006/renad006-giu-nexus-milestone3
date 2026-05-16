@@ -1,6 +1,8 @@
+import Footer from './components/Footer';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+
 // Placeholder components (teammates will replace these)
 const HomePage = () => <div>Home Page</div>;
 const LoginPage = () => <div>Login Page</div>;
@@ -35,44 +37,50 @@ const RoleRoute = ({ children, allowedRoles }) => {
 
 function App() {
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-      <Route path="/jobs" element={<JobListPage />} />
-      <Route path="/jobs/:id" element={<JobDetailPage />} />
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Navbar />
+      <main style={{ flex: 1 }}>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="/jobs" element={<JobListPage />} />
+          <Route path="/jobs/:id" element={<JobDetailPage />} />
 
-      {/* Protected routes - Job Seeker only */}
-      <Route path="/profile" element={
-        <PrivateRoute><ProfilePage /></PrivateRoute>
-      } />
-      <Route path="/profile/edit" element={
-        <PrivateRoute><EditProfilePage /></PrivateRoute>
-      } />
-      <Route path="/profile/change-password" element={
-        <PrivateRoute><ChangePasswordPage /></PrivateRoute>
-      } />
-      <Route path="/jobs/recommended" element={
-        <RoleRoute allowedRoles={['jobSeeker']}><RecommendedJobsPage /></RoleRoute>
-      } />
-      <Route path="/jobs/saved" element={
-        <RoleRoute allowedRoles={['jobSeeker']}><SavedJobsPage /></RoleRoute>
-      } />
+          {/* Protected routes - Job Seeker only */}
+          <Route path="/profile" element={
+            <PrivateRoute><ProfilePage /></PrivateRoute>
+          } />
+          <Route path="/profile/edit" element={
+            <PrivateRoute><EditProfilePage /></PrivateRoute>
+          } />
+          <Route path="/profile/change-password" element={
+            <PrivateRoute><ChangePasswordPage /></PrivateRoute>
+          } />
+          <Route path="/jobs/recommended" element={
+            <RoleRoute allowedRoles={['jobSeeker']}><RecommendedJobsPage /></RoleRoute>
+          } />
+          <Route path="/jobs/saved" element={
+            <RoleRoute allowedRoles={['jobSeeker']}><SavedJobsPage /></RoleRoute>
+          } />
 
-      {/* Protected routes - Recruiter only */}
-      <Route path="/recruiter/dashboard" element={
-        <RoleRoute allowedRoles={['recruiter']}><RecruiterDashboard /></RoleRoute>
-      } />
-      <Route path="/recruiter/jobs/create" element={
-        <RoleRoute allowedRoles={['recruiter']}><CreateJobPage /></RoleRoute>
-      } />
+          {/* Protected routes - Recruiter only */}
+          <Route path="/recruiter/dashboard" element={
+            <RoleRoute allowedRoles={['recruiter']}><RecruiterDashboard /></RoleRoute>
+          } />
+          <Route path="/recruiter/jobs/create" element={
+            <RoleRoute allowedRoles={['recruiter']}><CreateJobPage /></RoleRoute>
+          } />
 
-      {/* Catch all */}
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+          {/* Catch all */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
   );
 }
 

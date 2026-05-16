@@ -1,0 +1,102 @@
+/* client/src/components/Footer.css */
+
+/* ── Palette ─────────────────────────────────────────── */
+:root {
+  --ivory:      #F9EAD2;
+  --champagne:  #F8EEC2;
+  --peach:      #DB918F;
+  --bistre:     #837534;
+  --forest:     #4F5127;
+}
+
+/* ── Footer shell ────────────────────────────────────── */
+.footer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--forest);
+  padding: 36px 24px 28px;
+  text-align: center;
+}
+
+/* soft decorative blobs */
+.footer-bloom {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.footer-bloom--left {
+  background: var(--peach);
+  top: -80px;
+  left: -80px;
+}
+.footer-bloom--right {
+  background: var(--champagne);
+  bottom: -100px;
+  right: -60px;
+}
+
+/* ── Inner content ───────────────────────────────────── */
+.footer-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-logo {
+  color: var(--peach);
+  font-size: 1rem;
+  animation: pulse-star 3s ease-in-out infinite;
+}
+.footer-logo:last-child {
+  animation-delay: 1.5s;
+}
+
+@keyframes pulse-star {
+  0%, 100% { opacity: 1; transform: scale(1);   }
+  50%       { opacity: 0.4; transform: scale(0.8); }
+}
+
+.footer-name {
+  font-family: 'Georgia', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ivory);
+  text-transform: uppercase;
+}
+
+.footer-tagline {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--champagne);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.footer-divider-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--peach), transparent);
+  margin: 4px 0;
+}
+
+.footer-team {
+  font-size: 0.75rem;
+  color: var(--bistre);
+  letter-spacing: 0.8px;
+  margin: 0;
+  text-transform: uppercase;
+}
