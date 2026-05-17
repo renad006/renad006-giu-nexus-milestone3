@@ -25,7 +25,6 @@ const JobCard = ({ job }) => (
       e.currentTarget.style.boxShadow = "0 4px 20px rgba(131, 117, 52, 0.12)";
     }}
   >
-    {/* Company initial avatar */}
     <div style={{
       width: 40,
       height: 40,
@@ -95,63 +94,13 @@ const RecommendedJobs = () => {
         setLoading(false);
       }
     };
-    fetchRecommended();
+
+    if (user) fetchRecommended();
+    else setLoading(false);
   }, [user]);
 
-  // TEMPORARY mock data — remove after testing
-  if (true) return (
-    <section style={{ padding: "32px 0" }}>
-      <div style={{ marginBottom: 24 }}>
-        <h2 style={{
-          color: "#F9EAD2",
-          margin: "0 0 4px 0",
-          fontFamily: "Georgia, serif",
-          fontSize: "1.5rem",
-        }}>
-          ✦ Recommended for You ✦
-        </h2>
-        <p style={{
-          color: "#837534",
-          margin: 0,
-          fontSize: "0.8rem",
-          letterSpacing: "1px",
-          textTransform: "uppercase",
-        }}>
-          Ranked by AI match score
-        </p>
-      </div>
+  if (!user) return null;
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
-        {[
-          { _id: "1", title: "Frontend Developer", company: "Google", location: "Cairo", score: 0.92 },
-          { _id: "2", title: "ML Engineer", company: "Meta", location: "Remote", score: 0.87 },
-          { _id: "3", title: "DevOps Lead", company: "AWS", location: "Dubai", score: 0.75 },
-        ].map(job => (
-          <div key={job._id} style={{ position: "relative" }}>
-            <JobCard job={job} />
-            {job.score && (
-              <div style={{
-                position: "absolute",
-                bottom: 12,
-                right: 12,
-                backgroundColor: "#DB918F",
-                color: "#4F5127",
-                borderRadius: 999,
-                padding: "3px 10px",
-                fontSize: "0.72rem",
-                fontWeight: 700,
-                letterSpacing: "0.5px",
-              }}>
-                {Math.round(job.score * 100)}% match
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-
-  // Loading skeleton
   if (loading) return (
     <section style={{ padding: "32px 0" }}>
       <h2 style={{ color: "#F9EAD2", marginBottom: 16, fontFamily: "Georgia, serif" }}>
@@ -172,7 +121,6 @@ const RecommendedJobs = () => {
     </section>
   );
 
-  // Empty state
   if (isEmpty) return (
     <section style={{ padding: "32px 0" }}>
       <h2 style={{ color: "#F9EAD2", marginBottom: 8, fontFamily: "Georgia, serif" }}>
@@ -187,7 +135,6 @@ const RecommendedJobs = () => {
     </section>
   );
 
-  // Error
   if (error) return (
     <section style={{ padding: "32px 0" }}>
       <h2 style={{ color: "#F9EAD2", marginBottom: 8, fontFamily: "Georgia, serif" }}>
@@ -197,7 +144,6 @@ const RecommendedJobs = () => {
     </section>
   );
 
-  // Success
   return (
     <section style={{ padding: "32px 0" }}>
       <div style={{ marginBottom: 24 }}>
