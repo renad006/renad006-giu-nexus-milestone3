@@ -2,6 +2,14 @@ import Footer from './components/Footer';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+import { getCategoryStyle } from './utils/categoryColors';
+import SkillChip from './components/SkillChip';
+import SkillExtractor from './components/SkillExtractor';
+import RecommendedJobs from './components/RecommendedJobs';
+import RecommendedJobsPage from './pages/RecommendedJobsPage';
+import CoverLetterGenerator from './components/CoverLetterGenerator';
+
+
 
 // Placeholder components (teammates will replace these)
 const HomePage = () => <div>Home Page</div>;
@@ -14,7 +22,6 @@ const EditProfilePage = () => <div>Edit Profile Page</div>;
 const ChangePasswordPage = () => <div>Change Password Page</div>;
 const JobListPage = () => <div>Job List Page</div>;
 const JobDetailPage = () => <div>Job Detail Page</div>;
-const RecommendedJobsPage = () => <div>Recommended Jobs Page</div>;
 const SavedJobsPage = () => <div>Saved Jobs Page</div>;
 const RecruiterDashboard = () => <div>Recruiter Dashboard</div>;
 const CreateJobPage = () => <div>Create Job Page</div>;
@@ -73,6 +80,40 @@ function App() {
           } />
           <Route path="/recruiter/jobs/create" element={
             <RoleRoute allowedRoles={['recruiter']}><CreateJobPage /></RoleRoute>
+          } />
+          <Route path="/test-colors" element={
+            <div style={{ padding: 40, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              {["Frontend", "Backend", "AI/ML", "DevOps", "Data Engineering", "Other"].map(cat => (
+                <span key={cat} style={{
+                  ...getCategoryStyle(cat),
+                  padding: '6px 14px',
+                  borderRadius: 999,
+                  fontWeight: 600,
+                  fontSize: '0.9rem'
+                }}>
+                  {cat}
+                </span>
+              ))}
+            </div>
+          } />
+          
+          <Route path="/test-skills" element={
+            <div style={{ padding: 40 }}>
+              <h2 style={{ color: "#F9EAD2" }}>Skill Extractor Test</h2>
+              <SkillExtractor initialSkills={["React", "Node.js", "Python"]} />
+            </div>
+          } />
+          <Route path="/test-recommended" element={
+            <div style={{ padding: 40 }}>
+              <h2 style={{ color: "#F9EAD2" }}>Recommended Jobs Test</h2>
+              <RecommendedJobs />
+            </div>
+          } />
+
+          <Route path="/test-cover-letter" element={
+            <div style={{ padding: 40, display: "flex", justifyContent: "center" }}>
+              <CoverLetterGenerator jobId="test123" />
+            </div>
           } />
 
           {/* Catch all */}
