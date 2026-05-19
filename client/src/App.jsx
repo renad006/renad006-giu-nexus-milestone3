@@ -12,14 +12,13 @@ import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
 import CreateJobPage from "./pages/recruiter/CreateJobPage";
 import EditJobPage from "./pages/recruiter/EditJobPage";
 import ApplicantsPage from "./pages/recruiter/ApplicantsPage";
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
-
-// Placeholder components (teammates will replace these)
+// Placeholder components for other members (to be replaced later)
 const HomePage = () => <div>Home Page</div>;
-const LoginPage = () => <div>Login Page</div>;
-const RegisterPage = () => <div>Register Page</div>;
-const ForgotPasswordPage = () => <div>Forgot Password Page</div>;
-const ResetPasswordPage = () => <div>Reset Password Page</div>;
 const ProfilePage = () => <div>Profile Page</div>;
 const EditProfilePage = () => <div>Edit Profile Page</div>;
 const ChangePasswordPage = () => <div>Change Password Page</div>;
@@ -88,6 +87,8 @@ function App() {
           <Route path="/recruiter/applicants/:jobId" element={
             <RoleRoute allowedRoles={['recruiter']}><ApplicantsPage /></RoleRoute>
           } />
+
+          {/* Test routes (can be removed later) */}
           <Route path="/test-colors" element={
             <div style={{ padding: 40, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               {["Frontend", "Backend", "AI/ML", "DevOps", "Data Engineering", "Other"].map(cat => (
