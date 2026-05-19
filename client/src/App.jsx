@@ -9,14 +9,14 @@ import RecommendedJobs from './components/RecommendedJobs';
 import RecommendedJobsPage from './pages/RecommendedJobsPage';
 import CoverLetterGenerator from './components/CoverLetterGenerator';
 
+// Real imports for Member 2's authentication pages
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
-
-// Placeholder components (teammates will replace these)
+// Placeholder components for other members (to be replaced later)
 const HomePage = () => <div>Home Page</div>;
-const LoginPage = () => <div>Login Page</div>;
-const RegisterPage = () => <div>Register Page</div>;
-const ForgotPasswordPage = () => <div>Forgot Password Page</div>;
-const ResetPasswordPage = () => <div>Reset Password Page</div>;
 const ProfilePage = () => <div>Profile Page</div>;
 const EditProfilePage = () => <div>Edit Profile Page</div>;
 const ChangePasswordPage = () => <div>Change Password Page</div>;
@@ -81,6 +81,8 @@ function App() {
           <Route path="/recruiter/jobs/create" element={
             <RoleRoute allowedRoles={['recruiter']}><CreateJobPage /></RoleRoute>
           } />
+
+          {/* Test routes (optional, can be removed later) */}
           <Route path="/test-colors" element={
             <div style={{ padding: 40, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               {["Frontend", "Backend", "AI/ML", "DevOps", "Data Engineering", "Other"].map(cat => (
