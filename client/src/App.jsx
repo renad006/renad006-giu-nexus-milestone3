@@ -8,8 +8,10 @@ import SkillExtractor from './components/SkillExtractor';
 import RecommendedJobs from './components/RecommendedJobs';
 import RecommendedJobsPage from './pages/RecommendedJobsPage';
 import CoverLetterGenerator from './components/CoverLetterGenerator';
-
-// Real imports for Member 2's authentication pages
+import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
+import CreateJobPage from "./pages/recruiter/CreateJobPage";
+import EditJobPage from "./pages/recruiter/EditJobPage";
+import ApplicantsPage from "./pages/recruiter/ApplicantsPage";
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -23,8 +25,6 @@ const ChangePasswordPage = () => <div>Change Password Page</div>;
 const JobListPage = () => <div>Job List Page</div>;
 const JobDetailPage = () => <div>Job Detail Page</div>;
 const SavedJobsPage = () => <div>Saved Jobs Page</div>;
-const RecruiterDashboard = () => <div>Recruiter Dashboard</div>;
-const CreateJobPage = () => <div>Create Job Page</div>;
 
 // PrivateRoute: only authenticated users
 const PrivateRoute = ({ children }) => {
@@ -81,8 +81,14 @@ function App() {
           <Route path="/recruiter/jobs/create" element={
             <RoleRoute allowedRoles={['recruiter']}><CreateJobPage /></RoleRoute>
           } />
+          <Route path="/recruiter/jobs/:id/edit" element={
+            <RoleRoute allowedRoles={['recruiter']}><EditJobPage /></RoleRoute>
+          } />
+          <Route path="/recruiter/applicants/:jobId" element={
+            <RoleRoute allowedRoles={['recruiter']}><ApplicantsPage /></RoleRoute>
+          } />
 
-          {/* Test routes (optional, can be removed later) */}
+          {/* Test routes (can be removed later) */}
           <Route path="/test-colors" element={
             <div style={{ padding: 40, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               {["Frontend", "Backend", "AI/ML", "DevOps", "Data Engineering", "Other"].map(cat => (
