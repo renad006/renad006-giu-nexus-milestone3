@@ -35,7 +35,7 @@ const changePassword = async (req, res) => {
     if (newPassword.length < 6) {
       return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
     }
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).select('+password');
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Current password is incorrect' });
