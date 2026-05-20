@@ -14,6 +14,7 @@ const SkillChip = ({ skill }) => {
     }}>
         {skill}
     </span>
-    ) ;
+    );
 };
+
 export default SkillChip;
