@@ -2,22 +2,33 @@ import Footer from './components/Footer';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
+
+// Your imports
 import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 import JobDetailPage from './pages/JobDetailPage';
 
-// Placeholder components (teammates will replace these)
+// Other members' imports
+import { getCategoryStyle } from './utils/categoryColors';
+import SkillChip from './components/SkillChip';
+import SkillExtractor from './components/SkillExtractor';
+import RecommendedJobs from './components/RecommendedJobs';
+import RecommendedJobsPage from './pages/RecommendedJobsPage';
+import CoverLetterGenerator from './components/CoverLetterGenerator';
+import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
+import CreateJobPage from "./pages/recruiter/CreateJobPage";
+import EditJobPage from "./pages/recruiter/EditJobPage";
+import ApplicantsPage from "./pages/recruiter/ApplicantsPage";
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+
+// Remaining placeholders
 const HomePage = () => <div>Home Page</div>;
-const LoginPage = () => <div>Login Page</div>;
-const RegisterPage = () => <div>Register Page</div>;
-const ForgotPasswordPage = () => <div>Forgot Password Page</div>;
-const ResetPasswordPage = () => <div>Reset Password Page</div>;
 const JobListPage = () => <div>Job List Page</div>;
-const RecommendedJobsPage = () => <div>Recommended Jobs Page</div>;
 const SavedJobsPage = () => <div>Saved Jobs Page</div>;
-const RecruiterDashboard = () => <div>Recruiter Dashboard</div>;
-const CreateJobPage = () => <div>Create Job Page</div>;
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -39,6 +50,7 @@ function App() {
       <Navbar />
       <main style={{ flex: 1 }}>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -47,13 +59,72 @@ function App() {
           <Route path="/jobs" element={<JobListPage />} />
           <Route path="/jobs/:id" element={<JobDetailPage />} />
 
-          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-          <Route path="/profile/edit" element={<PrivateRoute><EditProfilePage /></PrivateRoute>} />
-          <Route path="/profile/change-password" element={<PrivateRoute><ChangePasswordPage /></PrivateRoute>} />
-          <Route path="/jobs/recommended" element={<RoleRoute allowedRoles={['jobSeeker']}><RecommendedJobsPage /></RoleRoute>} />
-          <Route path="/jobs/saved" element={<RoleRoute allowedRoles={['jobSeeker']}><SavedJobsPage /></RoleRoute>} />
-          <Route path="/recruiter/dashboard" element={<RoleRoute allowedRoles={['recruiter']}><RecruiterDashboard /></RoleRoute>} />
-          <Route path="/recruiter/jobs/create" element={<RoleRoute allowedRoles={['recruiter']}><CreateJobPage /></RoleRoute>} />
+          {/* Protected routes - Job Seeker only */}
+          <Route path="/profile" element={
+            <PrivateRoute><ProfilePage /></PrivateRoute>
+          } />
+          <Route path="/profile/edit" element={
+            <PrivateRoute><EditProfilePage /></PrivateRoute>
+          } />
+          <Route path="/profile/change-password" element={
+            <PrivateRoute><ChangePasswordPage /></PrivateRoute>
+          } />
+          <Route path="/jobs/recommended" element={
+            <RoleRoute allowedRoles={['jobSeeker']}><RecommendedJobsPage /></RoleRoute>
+          } />
+          <Route path="/jobs/saved" element={
+            <RoleRoute allowedRoles={['jobSeeker']}><SavedJobsPage /></RoleRoute>
+          } />
+
+          {/* Protected routes - Recruiter only */}
+          <Route path="/recruiter/dashboard" element={
+            <RoleRoute allowedRoles={['recruiter']}><RecruiterDashboard /></RoleRoute>
+          } />
+          <Route path="/recruiter/jobs/create" element={
+            <RoleRoute allowedRoles={['recruiter']}><CreateJobPage /></RoleRoute>
+          } />
+          <Route path="/recruiter/jobs/:id/edit" element={
+            <RoleRoute allowedRoles={['recruiter']}><EditJobPage /></RoleRoute>
+          } />
+          <Route path="/recruiter/applicants/:jobId" element={
+            <RoleRoute allowedRoles={['recruiter']}><ApplicantsPage /></RoleRoute>
+          } />
+
+          {/* Test routes */}
+          <Route path="/test-colors" element={
+            <div style={{ padding: 40, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              {["Frontend", "Backend", "AI/ML", "DevOps", "Data Engineering", "Other"].map(cat => (
+                <span key={cat} style={{
+                  ...getCategoryStyle(cat),
+                  padding: '6px 14px',
+                  borderRadius: 999,
+                  fontWeight: 600,
+                  fontSize: '0.9rem'
+                }}>
+                  {cat}
+                </span>
+              ))}
+            </div>
+          } />
+          <Route path="/test-skills" element={
+            <div style={{ padding: 40 }}>
+              <h2 style={{ color: "#F9EAD2" }}>Skill Extractor Test</h2>
+              <SkillExtractor initialSkills={["React", "Node.js", "Python"]} />
+            </div>
+          } />
+          <Route path="/test-recommended" element={
+            <div style={{ padding: 40 }}>
+              <h2 style={{ color: "#F9EAD2" }}>Recommended Jobs Test</h2>
+              <RecommendedJobs />
+            </div>
+          } />
+          <Route path="/test-cover-letter" element={
+            <div style={{ padding: 40, display: "flex", justifyContent: "center" }}>
+              <CoverLetterGenerator jobId="test123" />
+            </div>
+          } />
+
+          {/* Catch all */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
