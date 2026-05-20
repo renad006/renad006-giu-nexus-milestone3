@@ -16,24 +16,22 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import ProfilePage from './pages/ProfilePage';
+import EditProfilePage from './pages/EditProfilePage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
+import JobDetailPage from './pages/JobDetailPage';
 
-// Placeholder components for other members (to be replaced later)
+// Placeholder components for pages not yet built
 const HomePage = () => <div>Home Page</div>;
-const ProfilePage = () => <div>Profile Page</div>;
-const EditProfilePage = () => <div>Edit Profile Page</div>;
-const ChangePasswordPage = () => <div>Change Password Page</div>;
 const JobListPage = () => <div>Job List Page</div>;
-const JobDetailPage = () => <div>Job Detail Page</div>;
 const SavedJobsPage = () => <div>Saved Jobs Page</div>;
 
-// PrivateRoute: only authenticated users
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
-// RoleRoute: authenticated + specific role
 const RoleRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, user, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
@@ -104,7 +102,7 @@ function App() {
               ))}
             </div>
           } />
-          
+
           <Route path="/test-skills" element={
             <div style={{ padding: 40 }}>
               <h2 style={{ color: "#F9EAD2" }}>Skill Extractor Test</h2>
