@@ -23,6 +23,10 @@ import JobDetailPage from './pages/JobDetailPage';
 
 // Placeholder components for pages not yet built
 import HomePage from './pages/HomePage';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import PendingRecruitersPage from './pages/admin/PendingRecruitersPage';
+import AdminJobsPage from './pages/admin/AdminJobsPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
 const JobListPage = () => <div>Job List Page</div>;
 const SavedJobsPage = () => <div>Saved Jobs Page</div>;
 
@@ -122,6 +126,19 @@ function App() {
             </div>
           } />
 
+{/* Admin routes */}
+          <Route path="/admin/dashboard" element={
+            <RoleRoute allowedRoles={['admin']}><AdminDashboard /></RoleRoute>
+          } />
+          <Route path="/admin/recruiters" element={
+            <RoleRoute allowedRoles={['admin']}><PendingRecruitersPage /></RoleRoute>
+          } />
+          <Route path="/admin/jobs" element={
+            <RoleRoute allowedRoles={['admin']}><AdminJobsPage /></RoleRoute>
+          } />
+          <Route path="/admin/users" element={
+            <RoleRoute allowedRoles={['admin']}><AdminUsersPage /></RoleRoute>
+          } />
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
