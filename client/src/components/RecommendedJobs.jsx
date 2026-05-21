@@ -1,76 +1,10 @@
-// src/components/RecommendedJobs.jsx
+// client/src/components/RecommendedJobs.jsx
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
-
-// TODO: swap for real JobCard once Member 3 is done
-const JobCard = ({ job }) => (
-  <div style={{
-    backgroundColor: "#0f0f0f",
-    border: "1px solid #837534",
-    borderRadius: 12,
-    padding: "20px 20px 40px 20px",
-    width: 240,
-    boxShadow: "0 4px 20px rgba(131, 117, 52, 0.12)",
-    transition: "transform 0.2s, box-shadow 0.2s",
-    cursor: "pointer",
-    position: "relative",
-  }}
-    onMouseEnter={e => {
-      e.currentTarget.style.transform = "translateY(-4px)";
-      e.currentTarget.style.boxShadow = "0 8px 28px rgba(131, 117, 52, 0.25)";
-    }}
-    onMouseLeave={e => {
-      e.currentTarget.style.transform = "translateY(0)";
-      e.currentTarget.style.boxShadow = "0 4px 20px rgba(131, 117, 52, 0.12)";
-    }}
-  >
-    <div style={{
-      width: 40,
-      height: 40,
-      borderRadius: "50%",
-      backgroundColor: "#837534",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      marginBottom: 12,
-      fontSize: "1rem",
-      fontWeight: 700,
-      color: "#F9EAD2",
-      fontFamily: "Georgia, serif",
-    }}>
-      {job.company?.[0] || "?"}
-    </div>
-
-    <h4 style={{
-      color: "#F9EAD2",
-      margin: "0 0 6px 0",
-      fontSize: "1rem",
-      fontFamily: "Georgia, serif",
-      lineHeight: 1.3,
-    }}>
-      {job.title}
-    </h4>
-
-    <p style={{
-      color: "#F8EEC2",
-      margin: "0 0 4px 0",
-      fontSize: "0.82rem",
-      fontWeight: 600,
-    }}>
-      {job.company}
-    </p>
-
-    <p style={{
-      color: "#837534",
-      margin: 0,
-      fontSize: "0.78rem",
-      letterSpacing: "0.5px",
-    }}>
-      📍 {job.location}
-    </p>
-  </div>
-);
+import JobCard from "./JobCard";
+import Skeleton from "./Skeleton";
+import EmptyState from "./EmptyState";
 
 const RecommendedJobs = () => {
   const { user } = useAuth();
@@ -107,16 +41,7 @@ const RecommendedJobs = () => {
         ✦ Recommended for You
       </h2>
       <div style={{ display: "flex", gap: 16 }}>
-        {[1, 2, 3].map(i => (
-          <div key={i} style={{
-            width: 240,
-            height: 140,
-            backgroundColor: "#1a1a1a",
-            borderRadius: 12,
-            border: "1px solid #837534",
-            opacity: 0.5,
-          }} />
-        ))}
+        <Skeleton variant="job-card" count={3} />
       </div>
     </section>
   );
@@ -126,12 +51,13 @@ const RecommendedJobs = () => {
       <h2 style={{ color: "#F9EAD2", marginBottom: 8, fontFamily: "Georgia, serif" }}>
         ✦ Recommended for You
       </h2>
-      <p style={{ color: "#F8EEC2" }}>
-        We need your skills to recommend jobs.{" "}
-        <a href="/profile" style={{ color: "#DB918F" }}>
-          Extract your skills from your bio →
-        </a>
-      </p>
+      <EmptyState
+        icon="🧠"
+        title="No skills yet"
+        message="Extract skills from your bio to get personalised job recommendations."
+        ctaLink="/profile"
+        ctaText="Go to Profile →"
+      />
     </section>
   );
 
@@ -140,7 +66,11 @@ const RecommendedJobs = () => {
       <h2 style={{ color: "#F9EAD2", marginBottom: 8, fontFamily: "Georgia, serif" }}>
         ✦ Recommended for You
       </h2>
-      <p style={{ color: "#DB918F" }}>{error}</p>
+      <EmptyState
+        icon="⚠️"
+        title="Could not load recommendations"
+        message={error}
+      />
     </section>
   );
 
@@ -168,7 +98,11 @@ const RecommendedJobs = () => {
       <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
         {jobs.map(job => (
           <div key={job._id} style={{ position: "relative" }}>
-            <JobCard job={job} />
+            <JobCard
+              job={job}
+              isAuthenticated={true}
+              userRole="jobSeeker"
+            />
             {job.score && (
               <div style={{
                 position: "absolute",
