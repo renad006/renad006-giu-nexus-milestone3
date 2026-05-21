@@ -22,7 +22,7 @@ import ChangePasswordPage from './pages/ChangePasswordPage';
 import JobDetailPage from './pages/JobDetailPage';
 
 // Placeholder components for pages not yet built
-const HomePage = () => <div>Home Page</div>;
+import HomePage from './pages/HomePage';
 const JobListPage = () => <div>Job List Page</div>;
 const SavedJobsPage = () => <div>Saved Jobs Page</div>;
 
