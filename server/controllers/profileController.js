@@ -55,20 +55,53 @@ const extractSkills = async (req, res) => {
     if (!user.bio) {
       return res.status(400).json({ success: false, message: 'Bio is empty. Update your profile first.' });
     }
+    
     try {
       const result = await hf.tokenClassification({
         model: 'dslim/bert-base-NER',
         inputs: user.bio,
       });
+      
       console.log('RAW NER RESULT:', JSON.stringify(result));
-     const cleaned = [...new Set(
-  result
-    .filter(e => ['B-MISC', 'I-MISC', 'B-ORG', 'I-ORG', 'MISC', 'ORG'].includes(e.entity_group))
-    .map(e => e.word)
-    .filter(word => !word.startsWith('##') && word.length > 2 && !/^[^a-zA-Z]/.test(word))
-)];
+      
+      // Improved cleaning: reconstruct words from subword tokens
+      let currentWord = '';
+      let currentEntity = '';
+      const extractedSkills = [];
+      
+      result.forEach((token, index) => {
+        if (token.word.startsWith('##')) {
+          // Subword token - append to current word
+          currentWord += token.word.substring(2);
+        } else {
+          // New word - save previous if valid
+          if (currentWord && currentEntity && 
+              ['MISC', 'ORG', 'B-MISC', 'I-MISC', 'B-ORG', 'I-ORG'].includes(currentEntity)) {
+            if (currentWord.length > 2 && /^[A-Za-z]/.test(currentWord)) {
+              extractedSkills.push(currentWord);
+            }
+          }
+          currentWord = token.word;
+          currentEntity = token.entity_group;
+        }
+        
+        // Handle last token
+        if (index === result.length - 1 && currentWord && currentEntity) {
+          if (['MISC', 'ORG', 'B-MISC', 'I-MISC', 'B-ORG', 'I-ORG'].includes(currentEntity)) {
+            if (currentWord.length > 2 && /^[A-Za-z]/.test(currentWord)) {
+              extractedSkills.push(currentWord);
+            }
+          }
+        }
+      });
+      
+      const cleaned = [...new Set(extractedSkills)]; // Remove duplicates
+      
+      console.log('CLEANED SKILLS:', cleaned);
+      
       await User.findByIdAndUpdate(req.user._id, { skills: cleaned });
       res.status(200).json({ success: true, skills: cleaned, extracted: cleaned });
+      
     } catch (aiErr) {
       console.error('AI ERROR:', aiErr.message);
       res.status(200).json({ success: true, skills: user.skills, extracted: user.skills });
@@ -78,4 +111,6 @@ const extractSkills = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+
 module.exports = { getProfile, updateProfile, changePassword, extractSkills };
