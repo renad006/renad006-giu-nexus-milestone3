@@ -20,26 +20,28 @@ const LoginPage = () => {
       const response = await api.post('/auth/login', { email, password });
       const { token, user } = response.data;
       login(token, user);
-      navigate('/'); // redirect to home page
+      navigate('/');
     } catch (err) {
       const message = err.response?.data?.message || 'Login failed';
       setError(message);
+      // Do NOT clear the form – leave email/password as they were
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
+    <div style={{ maxWidth: '400px', margin: '2rem auto', padding: '1rem' }}>
       <h2>Login</h2>
-      {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit}>
+      {/* Stack fields vertically */}
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          style={{ padding: '0.5rem', fontSize: '1rem' }}
         />
         <input
           type="password"
@@ -47,15 +49,28 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          style={{ padding: '0.5rem', fontSize: '1rem' }}
         />
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ padding: '0.5rem', fontSize: '1rem', cursor: 'pointer' }}
+        >
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      <p>
+
+      {/* Error message – show in red */}
+      {error && (
+        <div style={{ color: 'red', marginTop: '1rem', textAlign: 'center' }}>
+          {error}
+        </div>
+      )}
+
+      <p style={{ marginTop: '1rem', textAlign: 'center' }}>
         <Link to="/forgot-password">Forgot password?</Link>
       </p>
-      <p>
+      <p style={{ textAlign: 'center' }}>
         Don't have an account? <Link to="/register">Register</Link>
       </p>
     </div>

@@ -24,9 +24,10 @@ const RegisterPage = () => {
 
       if (role === 'recruiter' && user.status === 'pending') {
         setPendingNotice(true);
-        // Stay on register page and show notice (do not redirect automatically)
+        // Stay on the page – do NOT redirect
       } else {
-        navigate('/login'); // jobSeeker goes to login page
+        // Job seekers go to login page
+        navigate('/login');
       }
     } catch (err) {
       const message = err.response?.data?.message || 'Registration failed';
@@ -37,22 +38,27 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-container">
+    <div style={{ maxWidth: '400px', margin: '2rem auto', padding: '1rem' }}>
       <h2>Register</h2>
-      {error && <div className="error">{error}</div>}
+
+      {/* Pending notice for recruiters */}
       {pendingNotice && (
-        <div className="pending-notice">
-          Your account has been created and is pending admin approval.
-          You will be able to post jobs once approved.
+        <div style={{ backgroundColor: '#fff3cd', color: '#856404', padding: '0.75rem', borderRadius: '4px', marginBottom: '1rem' }}>
+          Your account has been created and is pending admin approval. You will be able to post jobs once approved.
         </div>
       )}
-      <form onSubmit={handleSubmit}>
+
+      {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+
+      {/* Stack fields vertically */}
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <input
           type="text"
           placeholder="Full Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          style={{ padding: '0.5rem', fontSize: '1rem' }}
         />
         <input
           type="email"
@@ -60,6 +66,7 @@ const RegisterPage = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          style={{ padding: '0.5rem', fontSize: '1rem' }}
         />
         <input
           type="password"
@@ -68,16 +75,26 @@ const RegisterPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={6}
+          style={{ padding: '0.5rem', fontSize: '1rem' }}
         />
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          style={{ padding: '0.5rem', fontSize: '1rem' }}
+        >
           <option value="jobSeeker">Job Seeker</option>
           <option value="recruiter">Recruiter</option>
         </select>
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ padding: '0.5rem', fontSize: '1rem', cursor: 'pointer' }}
+        >
           {loading ? 'Creating account...' : 'Register'}
         </button>
       </form>
-      <p>
+
+      <p style={{ marginTop: '1rem', textAlign: 'center' }}>
         Already have an account? <Link to="/login">Login</Link>
       </p>
     </div>
