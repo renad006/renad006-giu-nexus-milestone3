@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
 
+
 // TODO: swap for real JobCard once Member 3 is done
 // import JobCard from "../components/JobCard";
 const JobCard = ({ job }) => (
