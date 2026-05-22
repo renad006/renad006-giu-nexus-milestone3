@@ -5,13 +5,22 @@ import { useAuth } from '../context/AuthContext';
 import ApplicationStatusBadge from '../components/ApplicationStatusBadge';
 import Spinner from '../components/Spinner';
 
+// const categoryColors = {
+//   Frontend: { backgroundColor: '#4F5127', color: '#F9EAD2' },
+//   Backend: { backgroundColor: '#837534', color: '#F9EAD2' },
+//   'AI/ML': { backgroundColor: '#DB918F', color: '#F9EAD2' },
+//   DevOps: { backgroundColor: '#F8EEC2', color: '#4F5127' },
+//   'Data Engineering': { backgroundColor: '#F9EAD2', color: '#837534' },
+//   Other: { backgroundColor: '#ccc', color: '#333' },
+// };
+
 const categoryColors = {
-  Frontend: { backgroundColor: '#4F5127', color: '#F9EAD2' },
-  Backend: { backgroundColor: '#837534', color: '#F9EAD2' },
-  'AI/ML': { backgroundColor: '#DB918F', color: '#F9EAD2' },
-  DevOps: { backgroundColor: '#F8EEC2', color: '#4F5127' },
-  'Data Engineering': { backgroundColor: '#F9EAD2', color: '#837534' },
-  Other: { backgroundColor: '#ccc', color: '#333' },
+  Frontend: { backgroundColor: '#DB918F', color: '#F9EAD2' },    // ✅ Salmon/pink
+  Backend: { backgroundColor: '#837534', color: '#F9EAD2' },     // ✅ Dark olive
+  'AI/ML': { backgroundColor: '#4F5127', color: '#F9EAD2' },     // ✅ Dark green
+  DevOps: { backgroundColor: '#F8EEC2', color: '#4F5127' },      // ✅ Champagne yellow
+  'Data Engineering': { backgroundColor: '#F9EAD2', color: '#837534' }, // ✅ Antique ivory
+  Other: { backgroundColor: '#837534', color: '#F9EAD2' },       // ✅ Muted olive
 };
 
 const JobDetailPage = () => {

@@ -57,13 +57,16 @@ exports.createJob = async (req, res) => {
 
     let category = "Other";
     try {
+      // Combine title + description for better context
+      const inputText = `Job Title: ${req.body.title}\nJob Description: ${req.body.description}`;
+      
       const result = await hf.zeroShotClassification({
         model: "facebook/bart-large-mnli",
-        inputs: [req.body.description],
+        inputs: inputText,
         parameters: {
           candidate_labels: [
             "Frontend",
-            "Backend",
+            "Backend", 
             "AI/ML",
             "DevOps",
             "Data Engineering",
@@ -71,7 +74,24 @@ exports.createJob = async (req, res) => {
           ]
         }
       });
-      category = result[0].labels[0];
+      
+      // ✅ Handle both possible response formats
+      let predictions;
+      if (Array.isArray(result) && Array.isArray(result[0])) {
+        // Format: [ [ {label, score}, ... ] ]
+        predictions = result[0];
+      } else if (Array.isArray(result)) {
+        // Format: [ {label, score}, ... ]
+        predictions = result;
+      } else {
+        predictions = [];
+      }
+      
+      if (predictions.length > 0) {
+        const sortedResults = predictions.sort((a, b) => b.score - a.score);
+        category = sortedResults[0].label;
+        console.log("AI Result:", sortedResults);
+      }
     } catch (error) {
       console.error("HF Error:", error.message);
     }
@@ -182,9 +202,11 @@ exports.updateJob = async (req, res) => {
 
     if (req.body.title || req.body.description) {
       try {
+        const inputText = `Job Title: ${req.body.title || job.title}\nJob Description: ${newDescription}`;
+        
         const result = await hf.zeroShotClassification({
           model: "facebook/bart-large-mnli",
-          inputs: [newDescription],
+          inputs: inputText,
           parameters: {
             candidate_labels: [
               "Frontend",
@@ -196,7 +218,21 @@ exports.updateJob = async (req, res) => {
             ]
           }
         });
-        category = result[0].labels[0];
+        
+        // ✅ Handle both possible response formats
+        let predictions;
+        if (Array.isArray(result) && Array.isArray(result[0])) {
+          predictions = result[0];
+        } else if (Array.isArray(result)) {
+          predictions = result;
+        } else {
+          predictions = [];
+        }
+        
+        if (predictions.length > 0) {
+          const sortedResults = predictions.sort((a, b) => b.score - a.score);
+          category = sortedResults[0].label;
+        }
       } catch (error) {
         console.error("HF Error:", error.message);
       }
