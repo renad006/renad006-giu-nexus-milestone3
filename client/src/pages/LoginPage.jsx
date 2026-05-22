@@ -20,7 +20,9 @@ const LoginPage = () => {
       const response = await api.post('/auth/login', { email, password });
       const { token, user } = response.data;
       login(token, user);
-      navigate('/');
+      if (user.role === 'admin') navigate('/admin/dashboard');
+      else if (user.role === 'recruiter') navigate('/recruiter/dashboard');
+      else navigate('/');
     } catch (err) {
       const message = err.response?.data?.message || 'Login failed';
       setError(message);

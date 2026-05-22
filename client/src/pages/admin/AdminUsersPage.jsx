@@ -15,7 +15,7 @@ export default function AdminUsersPage() {
     if (roleFilter) params.append("role", roleFilter);
     if (statusFilter) params.append("status", statusFilter);
     api.get(`/users?${params}`)
-      .then(res => setUsers(res.data))
+      .then(res => setUsers(res.data.users || []))
       .catch(() => setError("Failed to load users"))
       .finally(() => setLoading(false));
   };
