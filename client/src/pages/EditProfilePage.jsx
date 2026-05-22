@@ -90,6 +90,7 @@ const EditProfilePage = () => {
             onChange={handleChange}
             style={inputStyle}
             placeholder="Your name"
+            required
           />
         </div>
 

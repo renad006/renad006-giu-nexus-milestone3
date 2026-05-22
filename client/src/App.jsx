@@ -2,12 +2,7 @@ import Footer from './components/Footer';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
-import { getCategoryStyle } from './utils/categoryColors';
-import SkillChip from './components/SkillChip';
-import SkillExtractor from './components/SkillExtractor';
-import RecommendedJobs from './components/RecommendedJobs';
 import RecommendedJobsPage from './pages/RecommendedJobsPage';
-import CoverLetterGenerator from './components/CoverLetterGenerator';
 import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
 import CreateJobPage from "./pages/recruiter/CreateJobPage";
 import EditJobPage from "./pages/recruiter/EditJobPage";
@@ -20,15 +15,14 @@ import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 import JobDetailPage from './pages/JobDetailPage';
-
-// Placeholder components for pages not yet built
 import HomePage from './pages/HomePage';
+import SavedJobsPage from './pages/SavedJobsPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import PendingRecruitersPage from './pages/admin/PendingRecruitersPage';
 import AdminJobsPage from './pages/admin/AdminJobsPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+
 const JobListPage = () => <div>Job List Page</div>;
-const SavedJobsPage = () => <div>Saved Jobs Page</div>;
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -90,43 +84,7 @@ function App() {
             <RoleRoute allowedRoles={['recruiter']}><ApplicantsPage /></RoleRoute>
           } />
 
-          {/* Test routes (can be removed later) */}
-          <Route path="/test-colors" element={
-            <div style={{ padding: 40, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              {["Frontend", "Backend", "AI/ML", "DevOps", "Data Engineering", "Other"].map(cat => (
-                <span key={cat} style={{
-                  ...getCategoryStyle(cat),
-                  padding: '6px 14px',
-                  borderRadius: 999,
-                  fontWeight: 600,
-                  fontSize: '0.9rem'
-                }}>
-                  {cat}
-                </span>
-              ))}
-            </div>
-          } />
-
-          <Route path="/test-skills" element={
-            <div style={{ padding: 40 }}>
-              <h2 style={{ color: "#F9EAD2" }}>Skill Extractor Test</h2>
-              <SkillExtractor initialSkills={["React", "Node.js", "Python"]} />
-            </div>
-          } />
-          <Route path="/test-recommended" element={
-            <div style={{ padding: 40 }}>
-              <h2 style={{ color: "#F9EAD2" }}>Recommended Jobs Test</h2>
-              <RecommendedJobs />
-            </div>
-          } />
-
-          <Route path="/test-cover-letter" element={
-            <div style={{ padding: 40, display: "flex", justifyContent: "center" }}>
-              <CoverLetterGenerator jobId="test123" />
-            </div>
-          } />
-
-{/* Admin routes */}
+          {/* Admin routes */}
           <Route path="/admin/dashboard" element={
             <RoleRoute allowedRoles={['admin']}><AdminDashboard /></RoleRoute>
           } />
@@ -139,6 +97,7 @@ function App() {
           <Route path="/admin/users" element={
             <RoleRoute allowedRoles={['admin']}><AdminUsersPage /></RoleRoute>
           } />
+
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

@@ -14,35 +14,48 @@ const ChangePasswordPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
+  e.preventDefault();
+  setError('');
+  setSuccess('');
 
-    if (form.newPassword !== form.confirmPassword) {
-      return setError('New passwords do not match');
-    }
-    if (form.newPassword.length < 6) {
-      return setError('New password must be at least 6 characters');
-    }
+  if (form.newPassword !== form.confirmPassword) {
+    return setError('New passwords do not match');
+  }
+  if (form.newPassword.length < 6) {
+    return setError('New password must be at least 6 characters');
+  }
 
-    setLoading(true);
-    try {
-      await api.patch('/profile/change-password', {
+  setLoading(true);
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch('http://localhost:5000/api/v1/profile/change-password', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
         currentPassword: form.currentPassword,
         newPassword: form.newPassword,
-      });
-      setSuccess('Password changed successfully!');
-      setTimeout(() => navigate('/profile'), 1500);
-    } catch (err) {
-      if (err.response?.status === 401) {
-        setError('Current password is incorrect');
-      } else {
-        setError(err.response?.data?.message || 'Failed to change password');
-      }
-    } finally {
-      setLoading(false);
+      }),
+    });
+
+    if (res.status === 401) {
+      return setError('Current password is incorrect');
     }
-  };
+    if (!res.ok) {
+      const data = await res.json();
+      return setError(data.message || 'Failed to change password');
+    }
+
+    setSuccess('Password changed successfully!');
+    setTimeout(() => navigate('/profile'), 1500);
+  } catch (err) {
+    setError('Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const inputStyle = {
     width: '100%',
