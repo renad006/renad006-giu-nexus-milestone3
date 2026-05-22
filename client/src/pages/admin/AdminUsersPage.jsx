@@ -1,178 +1,158 @@
 import { useState, useEffect } from "react";
 import api from "../../services/api";
 
+const colors = {
+  ivory: "#F9EAD2",
+  champagne: "#FBEEC2",
+  peach: "#DB918F",
+  bistre: "#837534",
+  olive: "#4F5127",
+  oliveLight: "#6b7355",
+  white: "#ffffff",
+  gray: "#9a9a8a",
+};
+
+const headlineStyle = {
+  color: colors.olive,
+  fontFamily: "'Georgia', serif",
+  fontSize: "1.8rem",
+  fontWeight: "700",
+  marginBottom: "1rem",
+  textAlign: "center",
+};
+
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [confirmId, setConfirmId] = useState(null);
 
-  const fetchUsers = () => {
-    setLoading(true);
-    const params = new URLSearchParams();
-    if (roleFilter) params.append("role", roleFilter);
-    if (statusFilter) params.append("status", statusFilter);
-    api.get(`/users?${params}`)
-      .then(res => setUsers(res.data.users || []))
-      .catch(() => setError("Failed to load users"))
-      .finally(() => setLoading(false));
+  const fetchUsers = async () => {
+    try {
+      const res = await api.get("/users");
+      setUsers(res.data.users || []);
+    } catch (err) {
+      setError("Failed to load users.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => { fetchUsers(); }, [roleFilter, statusFilter]);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-  const deleteUser = (id) => {
-    api.delete(`/users/${id}`)
-      .then(() => {
-        setUsers(prev => prev.filter(u => u._id !== id));
-        setConfirmId(null);
-      })
-      .catch(() => alert("Delete failed, try again"));
+  useEffect(() => {
+    let filtered = [...users];
+    if (roleFilter) filtered = filtered.filter(user => user.role === roleFilter);
+    if (statusFilter) filtered = filtered.filter(user => user.status === statusFilter);
+    setFilteredUsers(filtered);
+  }, [users, roleFilter, statusFilter]);
+
+  const handleStatusChange = async (userId, newStatus) => {
+    try {
+      await api.patch(`/users/${userId}/status`, { status: newStatus });
+      alert(`User status changed to ${newStatus}`);
+      // Force a full page reload to ensure UI reflects the change
+      window.location.reload();
+    } catch (err) {
+      console.error("Status update error:", err);
+      alert(`Failed to update status: ${err.response?.data?.message || err.message}`);
+    }
   };
 
-  const changeStatus = (id, status) => {
-    api.patch(`/users/${id}/status`, { status })
-      .then(() => fetchUsers())
-      .catch(() => alert("Status change failed, try again"));
-  };
+  if (loading) return <div style={{ padding: "2rem", textAlign: "center", color: colors.olive }}>Loading users...</div>;
+  if (error) return <div style={{ padding: "2rem", textAlign: "center", color: colors.peach }}>{error}</div>;
 
-  if (error) return <div style={{ padding: 40, color: "red" }}>{error}</div>;
+  const inputStyle = {
+    padding: "6px 12px",
+    borderRadius: "8px",
+    border: `1px solid ${colors.bistre}`,
+    backgroundColor: colors.white,
+    color: colors.olive,
+    fontSize: "14px",
+    outline: "none",
+  };
 
   return (
-    <div style={{ padding: 40, color: "#fff" }}>
-      <h1>All Users</h1>
+    <div style={{ maxWidth: "900px", margin: "2rem auto", padding: "0 1rem", fontFamily: "'Georgia', serif" }}>
+      <h1 style={headlineStyle}>✦ All Users</h1>
 
-      {/* Filters */}
-      <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
-        <select
-          value={roleFilter}
-          onChange={e => setRoleFilter(e.target.value)}
-          style={selectStyle}
-        >
+      <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginBottom: "2rem", flexWrap: "wrap" }}>
+        <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} style={inputStyle}>
           <option value="">All Roles</option>
+          <option value="admin">Admin</option>
           <option value="jobSeeker">Job Seeker</option>
           <option value="recruiter">Recruiter</option>
-          <option value="admin">Admin</option>
         </select>
-
-        <select
-          value={statusFilter}
-          onChange={e => setStatusFilter(e.target.value)}
-          style={selectStyle}
-        >
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={inputStyle}>
           <option value="">All Statuses</option>
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
           <option value="approved">Approved</option>
+          <option value="pending">Pending</option>
           <option value="rejected">Rejected</option>
         </select>
       </div>
 
-      {loading && <p>Loading...</p>}
-      {!loading && users.length === 0 && <p style={{ color: "#aaa" }}>No users found.</p>}
-
-      {users.map(u => (
-        <div key={u._id} style={cardStyle}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <p><strong>{u.name}</strong> — {u.email}</p>
-              <p style={{ color: "#aaa" }}>Role: {u.role} | Status: {u.status}</p>
-            </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              {u.status !== "approved" && (
-                <button onClick={() => changeStatus(u._id, "approved")} style={approveBtn}>
-                  Approve
-                </button>
-              )}
-              {u.status !== "rejected" && (
-                <button onClick={() => changeStatus(u._id, "rejected")} style={rejectBtn}>
+      {filteredUsers.length === 0 ? (
+        <p style={{ textAlign: "center", color: colors.gray }}>No users match filters.</p>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {filteredUsers.map(user => (
+            <div key={user._id} style={{
+              backgroundColor: colors.ivory,
+              border: `1px solid ${colors.bistre}`,
+              borderRadius: "12px",
+              padding: "1rem 1.5rem",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "1rem",
+            }}>
+              <div>
+                <h3 style={{ margin: 0, color: colors.olive }}>{user.name}</h3>
+                <p style={{ margin: "4px 0", color: colors.bistre }}>{user.email}</p>
+                <p style={{ margin: 0, fontSize: "0.85rem" }}>
+                  Role: <span style={{ fontWeight: "bold", color: colors.olive }}>{user.role}</span> | 
+                  Status: <span style={{ fontWeight: "bold", color: user.status === "approved" ? colors.olive : colors.peach }}>{user.status}</span>
+                </p>
+              </div>
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                <button
+                  onClick={() => handleStatusChange(user._id, "rejected")}
+                  style={{
+                    backgroundColor: colors.peach,
+                    color: colors.ivory,
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "6px 16px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                  }}
+                >
                   Reject
                 </button>
-              )}
-              <button onClick={() => setConfirmId(u._id)} style={deleteBtn}>
-                Delete
-              </button>
-            </div>
-          </div>
-
-          {/* Confirmation */}
-          {confirmId === u._id && (
-            <div style={confirmBox}>
-              <p>Are you sure you want to delete <strong>{u.name}</strong>?</p>
-              <div style={{ display: "flex", gap: 10 }}>
-                <button onClick={() => deleteUser(u._id)} style={rejectBtn}>Yes, Delete</button>
-                <button onClick={() => setConfirmId(null)} style={cancelBtn}>Cancel</button>
+                <button
+                  onClick={() => handleStatusChange(user._id, "approved")}
+                  style={{
+                    backgroundColor: colors.olive,
+                    color: colors.ivory,
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "6px 16px",
+                    cursor: "pointer",
+                    fontWeight: "600",
+                  }}
+                >
+                  Approve
+                </button>
               </div>
             </div>
-          )}
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }
-
-const cardStyle = {
-  background: "#1e1e2e",
-  border: "1px solid #333",
-  borderRadius: 12,
-  padding: "1.5rem",
-  marginBottom: 16,
-};
-
-const selectStyle = {
-  background: "#1e1e2e",
-  color: "#fff",
-  border: "1px solid #333",
-  borderRadius: 8,
-  padding: "8px 12px",
-  cursor: "pointer",
-};
-
-const approveBtn = {
-  background: "#22c55e",
-  color: "#fff",
-  border: "none",
-  padding: "8px 16px",
-  borderRadius: 8,
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const rejectBtn = {
-  background: "#ef4444",
-  color: "#fff",
-  border: "none",
-  padding: "8px 16px",
-  borderRadius: 8,
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const deleteBtn = {
-  background: "#7c3aed",
-  color: "#fff",
-  border: "none",
-  padding: "8px 16px",
-  borderRadius: 8,
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const cancelBtn = {
-  background: "#555",
-  color: "#fff",
-  border: "none",
-  padding: "8px 16px",
-  borderRadius: 8,
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const confirmBox = {
-  marginTop: 12,
-  padding: 12,
-  background: "#2a2a3e",
-  borderRadius: 8,
-  border: "1px solid #ef4444",
-};

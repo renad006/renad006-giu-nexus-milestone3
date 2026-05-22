@@ -1,83 +1,106 @@
 import { useState, useEffect } from "react";
 import api from "../../services/api";
 
+const colors = {
+  ivory: "#F9EAD2",
+  champagne: "#FBEEC2",
+  peach: "#DB918F",
+  bistre: "#837534",
+  olive: "#4F5127",
+  oliveLight: "#6b7355",
+  white: "#ffffff",
+  gray: "#9a9a8a",
+};
+
+const headlineStyle = {
+  color: colors.olive,
+  fontFamily: "'Georgia', serif",
+  fontSize: "1.8rem",
+  fontWeight: "700",
+  marginBottom: "1.5rem",
+  textAlign: "center",
+};
+
 export default function PendingRecruitersPage() {
   const [recruiters, setRecruiters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    api.get("/users?role=recruiter&status=pending")
-      .then(res => setRecruiters(res.data.users || []))
-      .catch(() => setError("Failed to load recruiters"))
-      .finally(() => setLoading(false));
+    fetchRecruiters();
   }, []);
 
-  const updateStatus = (id, status) => {
-    api.patch(`/users/${id}/status`, { status })
-      .then(() => setRecruiters(prev => prev.filter(r => r._id !== id)))
-      .catch(() => alert("Action failed, try again"));
+  const fetchRecruiters = async () => {
+    try {
+      const res = await api.get("/users?role=recruiter&status=pending");
+      setRecruiters(res.data.users || []);
+    } catch (err) {
+      setError("Failed to load pending recruiters.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (loading) return <div style={{ padding: 40, color: "#fff" }}>Loading...</div>;
-  if (error) return <div style={{ padding: 40, color: "red" }}>{error}</div>;
+  const handleStatus = async (userId, newStatus) => {
+    try {
+      await api.patch(`/users/${userId}/status`, { status: newStatus });
+      setRecruiters(prev => prev.filter(r => r._id !== userId));
+    } catch (err) {
+      alert("Failed to update status.");
+    }
+  };
+
+  if (loading) return <div style={{ padding: "2rem", textAlign: "center", color: colors.olive }}>Loading...</div>;
+  if (error) return <div style={{ padding: "2rem", textAlign: "center", color: colors.peach }}>{error}</div>;
 
   return (
-    <div style={{ padding: 40, color: "#fff" }}>
-      <h1>Pending Recruiters</h1>
+    <div style={{ maxWidth: "900px", margin: "2rem auto", padding: "0 1rem", fontFamily: "'Georgia', serif" }}>
+      <h1 style={headlineStyle}>✦ Pending Recruiters</h1>
 
-      {recruiters.length === 0 && (
-        <p style={{ color: "#aaa" }}>No pending recruiters right now.</p>
-      )}
-
-      {recruiters.map(r => (
-        <div key={r._id} style={cardStyle}>
-          <p><strong>{r.name}</strong></p>
-          <p style={{ color: "#aaa" }}>{r.email}</p>
-          <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-            <button
-              onClick={() => updateStatus(r._id, "approved")}
-              style={approveBtn}
-            >
-              Approve
-            </button>
-            <button
-              onClick={() => updateStatus(r._id, "rejected")}
-              style={rejectBtn}
-            >
-              Reject
-            </button>
-          </div>
+      {recruiters.length === 0 ? (
+        <p style={{ textAlign: "center", color: colors.gray }}>No pending recruiters.</p>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {recruiters.map(rec => (
+            <div key={rec._id} style={{
+              backgroundColor: colors.ivory,
+              border: `1px solid ${colors.bistre}`,
+              borderRadius: "12px",
+              padding: "1rem 1.5rem",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "1rem",
+            }}>
+              <div>
+                <h3 style={{ margin: 0, color: colors.olive }}>{rec.name}</h3>
+                <p style={{ margin: "4px 0 0", color: colors.bistre }}>{rec.email}</p>
+              </div>
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                <button onClick={() => handleStatus(rec._id, "approved")} style={{
+                  backgroundColor: colors.olive,
+                  color: colors.ivory,
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "6px 16px",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}>Approve</button>
+                <button onClick={() => handleStatus(rec._id, "rejected")} style={{
+                  backgroundColor: colors.peach,
+                  color: colors.ivory,
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "6px 16px",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}>Reject</button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }
-
-const cardStyle = {
-  background: "#1e1e2e",
-  border: "1px solid #333",
-  borderRadius: 12,
-  padding: "1.5rem",
-  marginBottom: 16,
-};
-
-const approveBtn = {
-  background: "#22c55e",
-  color: "#fff",
-  border: "none",
-  padding: "8px 20px",
-  borderRadius: 8,
-  cursor: "pointer",
-  fontWeight: 600,
-};
-
-const rejectBtn = {
-  background: "#ef4444",
-  color: "#fff",
-  border: "none",
-  padding: "8px 20px",
-  borderRadius: 8,
-  cursor: "pointer",
-  fontWeight: 600,
-};

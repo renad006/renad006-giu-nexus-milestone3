@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import JobCard from '../components/JobCard';
 
 const JobListPage = () => {
@@ -18,24 +19,29 @@ const JobListPage = () => {
     setLoading(true);
     setError('');
     try {
-      const params = new URLSearchParams();
-      if (filterParams.keyword) params.append('keyword', filterParams.keyword);
-      if (filterParams.location) params.append('location', filterParams.location);
-      if (filterParams.type) params.append('type', filterParams.type);
-      if (filterParams.status) params.append('status', filterParams.status);
-      const queryString = params.toString();
-      const url = `http://localhost:5000/api/v1/jobs${queryString ? '?' + queryString : ''}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.success && data.jobs) {
-        setJobs(data.jobs);
-      } else {
-        setJobs([]);
-        if (data.jobs?.length === 0) setError('');
-        else setError('Unexpected response format');
+      // Build query string
+      const queryParams = new URLSearchParams();
+      if (filterParams.keyword) queryParams.append('keyword', filterParams.keyword);
+      if (filterParams.location) queryParams.append('location', filterParams.location);
+      if (filterParams.type) queryParams.append('type', filterParams.type);
+      if (filterParams.status) queryParams.append('status', filterParams.status);
+      const queryString = queryParams.toString();
+      const url = `/jobs${queryString ? '?' + queryString : ''}`;
+      console.log('Fetching:', url); // debug
+
+      const res = await api.get(url);
+      console.log('API response:', res.data); // debug
+
+      // Backend returns { success: true, jobs: [...] }
+      const jobList = res.data.jobs || res.data || [];
+      setJobs(Array.isArray(jobList) ? jobList : []);
+      if (jobList.length === 0 && !filterParams.keyword && !filterParams.location && !filterParams.type) {
+        // Only show a message if there are truly no jobs (not just filtered out)
+        setError('No jobs found in the database.');
       }
     } catch (err) {
-      setError(err.message);
+      console.error('Fetch error:', err);
+      setError(err.response?.data?.message || 'Failed to load jobs. Please try again later.');
     } finally {
       setLoading(false);
     }
