@@ -21,7 +21,7 @@ const HomePage = () => {
       setLoading(true);
       setError(null);
       try {
-        const { data } = await api.get('/api/v1/jobs?status=open&limit=6');
+        const { data } = await api.get('/jobs?status=open&limit=6');
         // Normalise response — backend may return { jobs: [...] } or array
         const jobList = data.jobs || data || [];
         setJobs(Array.isArray(jobList) ? jobList : []);
