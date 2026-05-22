@@ -32,9 +32,14 @@ const JobDetailPage = () => {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await api.get(`/jobs/${id}`);
-        setJob(res.data.job);
+       const res = await api.get(`/jobs/${id}`);
+setJob(res.data.job);
 
+// Check if already saved
+if (isAuthenticated && user?.role === 'jobSeeker') {
+  const isSaved = res.data.job.savedBy?.includes(user._id);
+  setSaved(isSaved);
+}
         // Check if already applied
         if (isAuthenticated && user?.role === 'jobSeeker') {
           try {
@@ -156,14 +161,13 @@ const JobDetailPage = () => {
         </div>
       </div>
 
-      {/* Salary */}
-      {job.salary && (
-        <div style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ color: '#4F5127', borderBottom: '2px solid #DB918F', paddingBottom: '8px' }}>Salary</h3>
-          <p style={{ color: '#837534', fontSize: '18px', fontWeight: '600' }}>${job.salary}/month</p>
-        </div>
-      )}
-
+ {/* Salary */}
+<div style={{ marginBottom: '1.5rem' }}>
+  <h3 style={{ color: '#4F5127', borderBottom: '2px solid #DB918F', paddingBottom: '8px' }}>Salary</h3>
+  <p style={{ color: '#837534', fontSize: '18px', fontWeight: '600' }}>
+    {job.salary != null ? `$${job.salary.toLocaleString()}/month` : 'Not specified'}
+  </p>
+</div>
       {/* Description */}
       <div style={{ marginBottom: '1.5rem' }}>
         <h3 style={{ color: '#4F5127', borderBottom: '2px solid #DB918F', paddingBottom: '8px' }}>Description</h3>

@@ -43,7 +43,7 @@ const JobCard = ({ job, onSaveToggle, isAuthenticated, userRole }) => {
     setIsSaved(!isSaved); // optimistic update
 
     try {
-      const { data } = await api.post(`/api/v1/jobs/${job._id}/save`);
+      const { data } = await api.post(`/jobs/${job._id}/save`);
       setIsSaved(data.saved);
       if (onSaveToggle) onSaveToggle(job._id, data.saved);
     } catch (err) {
