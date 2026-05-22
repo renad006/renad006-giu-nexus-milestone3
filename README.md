@@ -38,18 +38,17 @@ GIU Nexus is a full-stack MERN application that connects students with recruiter
 giu-nexus/
 ├── client/                  # React frontend
 │   ├── public/
-│   │   ├── favicon.svg
-│   │   └── icons.svg
 │   ├── src/
 │   │   ├── assets/          # Static assets
 │   │   ├── components/      # Reusable UI components
 │   │   ├── context/         # AuthContext and global state
+│   │   ├── pages/           # One file per route/view
 │   │   ├── services/        # Axios instance and API calls
-│   │   ├── App.css
-│   │   ├── App.jsx          # Router setup
-│   │   ├── index.css
-│   │   └── main.jsx         # Entry point
+│   │   └── utils/           # Helper functions
+│   ├── .gitignore
+│   ├── eslint.config.js
 │   ├── index.html
+│   ├── package-lock.json
 │   ├── package.json
 │   └── vite.config.js
 ├── server/                  # Express backend
@@ -57,12 +56,20 @@ giu-nexus/
 │   ├── controllers/
 │   ├── middleware/
 │   ├── models/
+│   ├── node_modules/
 │   ├── routes/
 │   ├── services/
+│   ├── .env                 # Not committed to GitHub
+│   ├── .gitignore
+│   ├── package-lock.json
+│   ├── package.json
 │   ├── seed.js
 │   ├── server.js
-│   └── .env                 # Not committed to GitHub
+│   └── test-api.http
+├── .env.example
 ├── .gitignore
+├── net
+├── package-lock.json
 ├── package.json
 └── README.md
 ```
@@ -128,7 +135,7 @@ VITE_API_BASE_URL=http://localhost:5000
 
 ## Contributors
 
-- [Renad Hesham](https://github.com/renad006/renad006-giu-nexus-milestone3/commits?author=renad006)
+- [Renad](https://github.com/renad006/renad006-giu-nexus-milestone3/commits?author=renad006)
 - [Malak Haytham](https://github.com/renad006/renad006-giu-nexus-milestone3/commits?author=malak-haytham)
 - [Maya Mohamed](https://github.com/renad006/renad006-giu-nexus-milestone3/commits?author=mayamohamed-16001727)
 - [Nourhan Zahran](https://github.com/renad006/renad006-giu-nexus-milestone3/commits?author=nourhan-zahran)
