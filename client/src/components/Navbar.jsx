@@ -36,6 +36,7 @@ const Navbar = () => {
               <>
                 <Link to="/jobs/recommended" className="navbar-link">Recommended</Link>
                 <Link to="/jobs/saved" className="navbar-link">Saved Jobs</Link>
+                <Link to="/applications/my" className="navbar-link">My Applications</Link>   {/* 👈 ADDED */}
                 <Link to="/profile" className="navbar-link">Profile</Link>
               </>
             )}

@@ -21,8 +21,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import PendingRecruitersPage from './pages/admin/PendingRecruitersPage';
 import AdminJobsPage from './pages/admin/AdminJobsPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
-
-const JobListPage = () => <div>Job List Page</div>;
+import JobListPage from './pages/JobListPage';
+import MyApplicationsPage from './pages/MyApplicationsPage';   // 👈 ADDED
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -68,6 +68,10 @@ function App() {
           } />
           <Route path="/jobs/saved" element={
             <RoleRoute allowedRoles={['jobSeeker']}><SavedJobsPage /></RoleRoute>
+          } />
+          {/* 👇 ADDED ROUTE FOR MY APPLICATIONS */}
+          <Route path="/applications/my" element={
+            <RoleRoute allowedRoles={['jobSeeker']}><MyApplicationsPage /></RoleRoute>
           } />
 
           {/* Protected routes - Recruiter only */}

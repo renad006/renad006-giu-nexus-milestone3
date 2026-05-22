@@ -1,127 +1,107 @@
 // client/src/components/RecommendedJobs.jsx
-import '../pages/HomePage.css';
-
-import { useState, useEffect } from "react";
-import api from "../services/api";
-import { useAuth } from "../context/AuthContext";
-import JobCard from "./JobCard";
-import Skeleton from "./Skeleton";
-import EmptyState from "./EmptyState";
+import { useState, useEffect } from 'react';
+import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import JobCard from './JobCard';
+import Skeleton from './Skeleton';
+import EmptyState from './EmptyState';
 
 const RecommendedJobs = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!isAuthenticated || user?.role !== 'jobSeeker') {
+      setLoading(false);
+      return;
+    }
     const fetchRecommended = async () => {
       try {
-        const res = await api.get("/jobs/recommended");
-        setJobs(res.data.jobs || res.data);
+        const res = await api.get('/jobs/recommended');
+        const jobList = res.data.jobs || res.data || [];
+        setJobs(Array.isArray(jobList) ? jobList : []);
+        if (jobList.length === 0) setIsEmpty(true);
       } catch (err) {
         if (err.response?.status === 400) {
           setIsEmpty(true);
         } else {
-          setError("Could not load recommendations.");
+          setError('Could not load personalised recommendations.');
         }
       } finally {
         setLoading(false);
       }
     };
+    fetchRecommended();
+  }, [isAuthenticated, user]);
 
-    if (user) fetchRecommended();
-    else setLoading(false);
-  }, [user]);
+  if (!isAuthenticated || user?.role !== 'jobSeeker') return null;
 
-  if (!user) return null;
+  // Heading style that matches Trending Jobs exactly
+  const headingStyle = {
+    color: '#4F5127',
+    borderBottom: '3px solid #DB918F',
+    display: 'inline-block',
+    paddingBottom: '6px',
+    fontFamily: 'Georgia, serif',
+    fontSize: '1.5rem',
+    margin: '0 0 4px 0'
+  };
 
-  if (loading) return (
-    <section style={{ padding: "32px 0" }}>
-      <h2 style={{ color: "#F9EAD2", marginBottom: 16, fontFamily: "Georgia, serif" }}>
-        ✦ Recommended for You
-      </h2>
-      <div style={{ display: "flex", gap: 16 }}>
-        <Skeleton variant="job-card" count={3} />
-      </div>
-    </section>
-  );
+  const subheadingStyle = {
+    color: '#837534',
+    fontSize: '0.8rem',
+    margin: '0',
+    letterSpacing: '1px',
+    textTransform: 'uppercase'
+  };
 
-  if (isEmpty) return (
-    <section style={{ padding: "32px 0" }}>
-      <h2 style={{ color: "#F9EAD2", marginBottom: 8, fontFamily: "Georgia, serif" }}>
-        ✦ Recommended for You
-      </h2>
-      <EmptyState
-        icon="🧠"
-        title="No skills yet"
-        message="Extract skills from your bio to get personalised job recommendations."
-        ctaLink="/profile"
-        ctaText="Go to Profile →"
-      />
-    </section>
-  );
+  if (loading) {
+    return (
+      <section style={{ padding: '24px 0' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <h2 style={headingStyle}>✨ Recommended for You</h2>
+          <p style={subheadingStyle}>RANKED BY AI MATCH SCORE</p>
+        </div>
+        <div className="home-page__grid">
+          <Skeleton variant="job-card" count={3} />
+        </div>
+      </section>
+    );
+  }
 
-  if (error) return (
-    <section style={{ padding: "32px 0" }}>
-      <h2 style={{ color: "#F9EAD2", marginBottom: 8, fontFamily: "Georgia, serif" }}>
-        ✦ Recommended for You
-      </h2>
-      <EmptyState
-        icon="⚠️"
-        title="Could not load recommendations"
-        message={error}
-      />
-    </section>
-  );
+  if (isEmpty || error) {
+    return (
+      <section style={{ padding: '24px 0' }}>
+        <EmptyState
+          icon="🧠"
+          title="No recommendations yet"
+          message="Extract your skills from your bio to get AI‑powered job matches."
+          ctaLink="/profile"
+          ctaText="Extract Skills →"
+        />
+      </section>
+    );
+  }
+
+  if (jobs.length === 0) return null;
 
   return (
-    <section style={{ padding: "32px 0" }}>
-      <div style={{ marginBottom: 24 }}>
-        <h2 style={{
-          color: "#F9EAD2",
-          margin: "0 0 4px 0",
-          fontFamily: "Georgia, serif",
-          fontSize: "1.5rem",
-        }}>
-          ✦ Recommended for You
-        </h2>
-        <p style={{
-          color: "#837534",
-          margin: 0,
-          fontSize: "0.8rem",
-          letterSpacing: "1px",
-          textTransform: "uppercase",
-        }}>
-          Ranked by AI match score
-        </p>
+    <section style={{ padding: '24px 0' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h2 style={headingStyle}>✦ Recommended for You</h2>
+        <p style={subheadingStyle}>RANKED BY AI MATCH SCORE</p>
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+      <div className="home-page__grid">
         {jobs.map(job => (
-          <div key={job._id} style={{ position: "relative" }}>
-            <JobCard
-              job={job}
-              isAuthenticated={true}
-              userRole="jobSeeker"
-            />
-            {job.score && (
-              <div style={{
-                position: "absolute",
-                bottom: 12,
-                right: 12,
-                backgroundColor: "#DB918F",
-                color: "#4F5127",
-                borderRadius: 999,
-                padding: "3px 10px",
-                fontSize: "0.72rem",
-                fontWeight: 700,
-                letterSpacing: "0.5px",
-              }}>
-                {Math.round(job.score * 100)}% match
-              </div>
-            )}
-          </div>
+          <JobCard
+            key={job._id}
+            job={job}
+            isAuthenticated={isAuthenticated}
+            userRole={user?.role}
+          />
         ))}
       </div>
     </section>

@@ -1,3 +1,4 @@
+// client/src/pages/RecommendedJobsPage.jsx
 import { useState, useEffect } from "react";
 import api from "../services/api";
 import JobCard from "../components/JobCard";
@@ -76,19 +77,20 @@ const RecommendedJobsPage = () => {
               userRole="jobSeeker"
             />
             {job.score && (
-              <div style={{
-                position: 'absolute',
-                bottom: 12,
-                right: 12,
-                backgroundColor: '#DB918F',
-                color: '#4F5127',
-                borderRadius: 999,
-                padding: '3px 10px',
-                fontSize: '0.72rem',
-                fontWeight: 700,
-              }}>
-                {Math.round(job.score * 100)}% match
-              </div>
+             <div style={{
+  position: 'absolute',
+  bottom: 12,
+  right: 60,          // 👈 moves it left of the save button
+  backgroundColor: '#DB918F',
+  color: '#4F5127',
+  borderRadius: 999,
+  padding: '3px 10px',
+  fontSize: '0.72rem',
+  fontWeight: 700,
+  zIndex: 1,
+}}>
+  {Math.round(job.score * 100)}% match
+</div>
             )}
           </div>
         ))}
