@@ -8,7 +8,7 @@ export default function PendingRecruitersPage() {
 
   useEffect(() => {
     api.get("/users?role=recruiter&status=pending")
-      .then(res => setRecruiters(res.data))
+      .then(res => setRecruiters(res.data.users || []))
       .catch(() => setError("Failed to load recruiters"))
       .finally(() => setLoading(false));
   }, []);
