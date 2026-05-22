@@ -170,11 +170,13 @@ if (isAuthenticated && user?.role === 'jobSeeker') {
         </div>
       </div>
 
- {/* Salary */}
+{/* Salary */}
 <div style={{ marginBottom: '1.5rem' }}>
   <h3 style={{ color: '#4F5127', borderBottom: '2px solid #DB918F', paddingBottom: '8px' }}>Salary</h3>
   <p style={{ color: '#837534', fontSize: '18px', fontWeight: '600' }}>
-    {job.salary != null ? `$${job.salary.toLocaleString()}/month` : 'Not specified'}
+    {job.salary && Number(job.salary) > 0
+      ? `$${Number(job.salary).toLocaleString()}/month`
+      : 'Not specified'}
   </p>
 </div>
       {/* Description */}

@@ -7,7 +7,7 @@ const applicationSchema = new mongoose.Schema(
     coverLetter: { type: String, default: '' },
     status: {
         type: String,
-        enum: ['pending', 'shortlisted', 'rejected'],
+        enum: ['pending', 'shortlisted', 'rejected', 'approved'],
         default: 'pending'
     }
     },

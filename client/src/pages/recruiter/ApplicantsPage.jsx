@@ -14,7 +14,7 @@ const colors = {
   red: "#c0392b",
 };
 
-const STATUS_OPTIONS = ["pending", "shortlisted", "rejected"];
+const STATUS_OPTIONS = ["pending", "shortlisted", "rejected", "approved"];
 
 const statusStyle = {
   pending: {
@@ -31,6 +31,11 @@ const statusStyle = {
     background: "#fce4ec",
     color: "#c62828",
     border: "1px solid #ef9a9a",
+  },
+  approved: {
+    background: "#e8f5e9",
+    color: "#2e7d32",
+    border: "1px solid #a5d6a7",
   },
 };
 

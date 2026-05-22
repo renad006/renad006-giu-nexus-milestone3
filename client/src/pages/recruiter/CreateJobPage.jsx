@@ -307,6 +307,7 @@ const CreateJobPage = () => {
     type: "internship",
     salary: "",
     totalSlots: 1,
+    status: "open",
   });
   const [successJob, setSuccessJob] = useState(null);
   const [error, setError] = useState("");
@@ -320,6 +321,7 @@ const CreateJobPage = () => {
     e.target.style.boxShadow = "0 0 0 3px rgba(107, 115, 85, 0.12)";
     e.target.style.background = "#fff";
   };
+
   const blurStyle = (e) => {
     e.target.style.borderColor = "#e8e0d5";
     e.target.style.boxShadow = "none";
@@ -373,7 +375,7 @@ const CreateJobPage = () => {
             </div>
             <div style={styles.successField}>
               <span style={styles.successFieldLabel}>Type</span>
-              <span style={styles.successFieldValue} style={{ textTransform: "capitalize" }}>{successJob.type}</span>
+              <span style={{ ...styles.successFieldValue, textTransform: "capitalize" }}>{successJob.type}</span>
             </div>
             <div style={styles.successField}>
               <span style={styles.successFieldLabel}>
@@ -385,7 +387,7 @@ const CreateJobPage = () => {
             <div style={{ ...styles.successField, borderBottom: "none" }}>
               <span style={styles.successFieldLabel}>Status</span>
               <span style={{ ...styles.successFieldValue, color: "#4a5240", fontWeight: "700" }}>
-                ● Open
+                ● {successJob.status === "open" ? "Open" : "Closed"}
               </span>
             </div>
             <div style={styles.successActions}>
@@ -396,7 +398,17 @@ const CreateJobPage = () => {
                 style={styles.btnSecondary}
                 onClick={() => {
                   setSuccessJob(null);
-                  setFormData({ title: "", company: "", description: "", requirements: "", location: "", type: "internship", salary: "", totalSlots: 1 });
+                  setFormData({
+                    title: "",
+                    company: "",
+                    description: "",
+                    requirements: "",
+                    location: "",
+                    type: "internship",
+                    salary: "",
+                    totalSlots: 1,
+                    status: "open",
+                  });
                 }}
               >
                 Post Another
@@ -411,7 +423,6 @@ const CreateJobPage = () => {
   return (
     <div style={styles.page}>
       <div style={styles.container}>
-        {/* Header */}
         <div style={styles.header}>
           <div style={styles.headerAccent} />
           <div style={styles.headerAccent2} />
@@ -423,7 +434,6 @@ const CreateJobPage = () => {
           </p>
         </div>
 
-        {/* Form */}
         <div style={styles.body}>
           {error && (
             <div style={styles.errorBox}>
@@ -432,7 +442,6 @@ const CreateJobPage = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            {/* Row 1: Title + Company */}
             <div style={styles.row}>
               <div style={styles.fieldGroup}>
                 <label style={styles.label}>Job Title <span style={styles.required}>*</span></label>
@@ -460,7 +469,6 @@ const CreateJobPage = () => {
               </div>
             </div>
 
-            {/* Description */}
             <div style={styles.fieldGroup}>
               <label style={styles.label}>Description <span style={styles.required}>*</span></label>
               <textarea
@@ -475,7 +483,6 @@ const CreateJobPage = () => {
               <span style={styles.hint}>Used by AI to auto-classify the job category</span>
             </div>
 
-            {/* Requirements */}
             <div style={styles.fieldGroup}>
               <label style={styles.label}>Requirements <span style={styles.required}>*</span></label>
               <input
@@ -493,7 +500,6 @@ const CreateJobPage = () => {
             <hr style={styles.divider} />
             <p style={styles.sectionLabel}>Position Details</p>
 
-            {/* Row 2: Location + Type */}
             <div style={styles.row}>
               <div style={styles.fieldGroup}>
                 <label style={styles.label}>Location <span style={styles.required}>*</span></label>
@@ -523,7 +529,6 @@ const CreateJobPage = () => {
               </div>
             </div>
 
-            {/* Row 3: Salary + Slots */}
             <div style={styles.row}>
               <div style={styles.fieldGroup}>
                 <label style={styles.label}>Salary</label>
@@ -549,6 +554,23 @@ const CreateJobPage = () => {
                   onBlur={blurStyle}
                 />
               </div>
+            </div>
+
+            {/* ✅ ADDED STATUS FIELD */}
+            <div style={styles.fieldGroup}>
+              <label style={styles.label}>Status <span style={styles.required}>*</span></label>
+              <select
+                style={styles.select}
+                value={formData.status}
+                onChange={handleChange("status")}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+                required
+              >
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+              </select>
+              <span style={styles.hint}>Open jobs are visible to job seekers</span>
             </div>
 
             <button

@@ -35,7 +35,7 @@ const getApplications = async (req, res, next) => {
 const updateApplicationStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
-    const validStatuses = ['pending', 'shortlisted', 'rejected'];
+    const validStatuses = ['pending', 'shortlisted', 'rejected', 'approved']; // ✅ added 'approved'
 
     if (!status || !validStatuses.includes(status)) {
       return res.status(400).json({
